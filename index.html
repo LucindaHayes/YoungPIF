@@ -1515,11 +1515,11 @@ document.getElementById('ynContactForm').addEventListener('submit', async functi
   status.textContent = '';
   try {
     await submitHS(data);
-    status.className = ‘yn-form-status success’;
-    status.textContent = ‘✓ Message received! We’ll be in touch within one business day.’;
-    document.getElementById(‘ynContactForm’).reset();
-    document.getElementById(‘yn-subject’).value = YN_SUBJECTS.contact;
-    btn.textContent = ‘Message Sent ✓’;
+    status.className = 'yn-form-status success';
+    status.textContent = '✓ Message received! We\'ll be in touch within one business day.';
+    document.getElementById('ynContactForm').reset();
+    document.getElementById('yn-subject').value = YN_SUBJECTS.contact;
+    btn.textContent = 'Message Sent ✓';
   } catch(err) {
     status.className = 'yn-form-status error';
     status.textContent = 'Something went wrong. Please email us at support@giftingnetwork.com';
