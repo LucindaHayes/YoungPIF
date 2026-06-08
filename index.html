@@ -86,7 +86,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(247,243,236,
 .hero-stat.blue::before{background:var(--blue);}
 
 /* ── SHARED LAYOUT ── */
-section{padding:96px 32px;}
+section{padding:64px 32px;}
 .section-inner{max-width:var(--max);margin:0 auto;}
 .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
 .eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--green);}
@@ -332,7 +332,7 @@ footer{background:#0D0C0A;border-top:1px solid rgba(255,255,255,.06);padding:40p
   .nav-hamburger{display:flex;}
   .hero{padding-top:100px;}
   .hero::before{width:100%;opacity:.5;}
-  section{padding:64px 24px;}
+  section{padding:48px 24px;}
   .cta-field-row{grid-template-columns:1fr;}
   .numbers-top{gap:24px;}
 }
@@ -341,7 +341,7 @@ footer{background:#0D0C0A;border-top:1px solid rgba(255,255,255,.06);padding:40p
   .hero-stat-cards{gap:8px;}
   .who-grid{grid-template-columns:1fr;}
   .articles{grid-template-columns:1fr;}
-  section{padding:56px 20px;}
+  section{padding:40px 20px;}
   .hero{padding:90px 20px 48px;}
   .cta-section{padding:60px 20px;}
   .img-strip{padding:0 20px 48px;}
@@ -1548,10 +1548,13 @@ async function submitHS(d) {
 
 
 /* ── Scroll animations ── */
+var fadeEls=document.querySelectorAll('.fade-up');
 var observer=new IntersectionObserver(function(entries){
   entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');}});
-},{threshold:.12});
-document.querySelectorAll('.fade-up').forEach(function(el){observer.observe(el);});
+},{threshold:0,rootMargin:'0px 0px -40px 0px'});
+fadeEls.forEach(function(el){observer.observe(el);});
+/* Safety fallback: if observer doesn't fire (e.g. static host timing), reveal all after 500ms */
+setTimeout(function(){fadeEls.forEach(function(el){el.classList.add('visible');});},500);
 
 var navEl=document.querySelector('nav');
 var scrollTopBtn=document.querySelector('.scroll-top-btn');
@@ -1613,12 +1616,7 @@ document.addEventListener('click',function(e){
 <!-- Scroll to top -->
 <button class="scroll-top-btn" aria-label="Back to top" title="Back to top">↑</button>
 
-<!-- ── ZENDESK CHAT WIDGET ──────────────────────────────────────
-     ⚠️  Replace YOUR_ZENDESK_KEY with your actual Zendesk snippet key.
-     Find it in: Zendesk Admin → Channels → Web Widget (Classic or Messenger)
-     GiftingNetwork support email: support@giftingnetwork.com
-──────────────────────────────────────────────────────────────── -->
-<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=YOUR_ZENDESK_KEY"></script>
+
 <script>
   // Configure Zendesk widget branding to match YoungPIF
   window.zESettings = {
