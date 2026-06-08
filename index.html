@@ -180,8 +180,8 @@ h2 em{font-style:italic;color:var(--green);}
 .numbers-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:40px;}
 .calc-wrap{background:#fff;border:1px solid var(--rule);border-radius:var(--radius-lg);overflow:hidden;}
 .calc-header{background:var(--ink);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;}
-.calc-header-title{font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);}
-.calc-header-sub{font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,.3);}
+.calc-header-title{font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.9);}
+.calc-header-sub{font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,.65);}
 .calc-body{padding:24px;}
 .calc-inputs{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
 .ci{display:flex;flex-direction:column;gap:5px;}
@@ -1447,14 +1447,15 @@ function runCalc(){
     taxVals.push(+(taxAcc).toFixed(0));
     pifAcc*=(1+totalRet);taxAcc*=(1+totalRet);
   }
-  var ctx=document.getElementById('wc').getContext('2d');
-  if(wChart)wChart.destroy();
-  wChart=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:'Young PIF',data:pifVals,borderColor:'#00777B',backgroundColor:'rgba(0,119,123,0.12)',borderWidth:2.5,fill:true,tension:.4,pointRadius:0},{label:'Taxable sale',data:taxVals,borderColor:'rgba(255,255,255,0.25)',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,4],fill:false,tension:.4,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+f$(c.raw);}}}},scales:{x:{grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'rgba(13,12,10,0.45)',font:{family:'DM Mono',size:10}}},y:{grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'rgba(13,12,10,0.45)',font:{family:'DM Mono',size:10},callback:function(v){return f$(v);}}}}}});
+  try{
+    var ctx=document.getElementById('wc').getContext('2d');
+    if(wChart)wChart.destroy();
+    wChart=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:'Young PIF',data:pifVals,borderColor:'#1A6B52',backgroundColor:'rgba(26,107,82,0.10)',borderWidth:2.5,fill:true,tension:.4,pointRadius:0},{label:'Taxable sale',data:taxVals,borderColor:'rgba(100,95,88,0.45)',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,4],fill:false,tension:.4,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+f$(c.raw);}}}},scales:{x:{grid:{color:'rgba(13,12,10,0.06)'},ticks:{color:'rgba(13,12,10,0.50)',font:{family:'DM Mono',size:10}}},y:{grid:{color:'rgba(13,12,10,0.06)'},ticks:{color:'rgba(13,12,10,0.50)',font:{family:'DM Mono',size:10},callback:function(v){return f$(v);}}}}}});
+  }catch(e){console.warn('Chart.js unavailable:',e);}
 }
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('input[type=range]').forEach(function(el){el.addEventListener('input',runCalc);});
-  runCalc();
-});
+document.querySelectorAll('input[type=range]').forEach(function(el){el.addEventListener('input',runCalc);});
+runCalc();
+window.addEventListener('load',runCalc);
 
 /* ARTICLE MODAL */
 var articles = {};
@@ -1616,30 +1617,5 @@ document.addEventListener('click',function(e){
 <button class="scroll-top-btn" aria-label="Back to top" title="Back to top">↑</button>
 
 
-<script>
-  // Configure Zendesk widget branding to match YoungPIF
-  window.zESettings = {
-    webWidget: {
-      color: { theme: '#1A6B52', launcherText: '#ffffff' },
-      launcher: { label: { 'en-US': 'Support' } },
-      contactForm: {
-        title: { 'en-US': 'Contact GiftingNetwork' },
-        fields: [
-          { id: 'email', prefill: { '*': '' } }
-        ]
-      },
-      helpCenter: { suppress: false },
-      chat: {
-        suppress: false,
-        departments: { enabled: [] }
-      },
-      contactOptions: {
-        enabled: true,
-        chatLabelOnline: { 'en-US': 'Chat with us' },
-        contactFormLabel: { 'en-US': 'Email us at support@giftingnetwork.com' }
-      }
-    }
-  };
-</script>
 </body>
 </html>
