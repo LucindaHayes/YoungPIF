@@ -1489,10 +1489,9 @@ function switchFormTab(tab, btn) {
   if (subjectEl) subjectEl.value = YN_SUBJECTS[tab] || YN_SUBJECTS.contact;
 }
 
-/* ── CONTACT FORM: HubSpot + Zendesk (same as GiftingNetwork.com) ── */
+/* ── CONTACT FORM: HubSpot ── */
 var HS_PORTAL_ID  = '21379602';
 var HS_FORM_GUID  = '30cd1791-16b8-4ee0-adb5-0671079d93a6';
-var ZD_SUBDOMAIN  = 'giftingnetwork';
 
 document.getElementById('ynContactForm').addEventListener('submit', async function(e) {
   e.preventDefault();
@@ -1517,17 +1516,12 @@ document.getElementById('ynContactForm').addEventListener('submit', async functi
   status.className = 'yn-form-status';
   status.textContent = '';
   try {
-    var results = await Promise.allSettled([submitHS(data), submitZD(data)]);
-    var ok = results[0].status === 'fulfilled' || results[1].status === 'fulfilled';
-    if (ok) {
-      status.className = 'yn-form-status success';
-      status.textContent = '✓ Message received! We’ll be in touch within one business day.';
-      document.getElementById('ynContactForm').reset();
-      document.getElementById('yn-subject').value = YN_SUBJECTS.contact;
-      btn.textContent = 'Message Sent ✓';
-    } else {
-      throw new Error('Both channels failed');
-    }
+    await submitHS(data);
+    status.className = ‘yn-form-status success’;
+    status.textContent = ‘✓ Message received! We’ll be in touch within one business day.’;
+    document.getElementById(‘ynContactForm’).reset();
+    document.getElementById(‘yn-subject’).value = YN_SUBJECTS.contact;
+    btn.textContent = ‘Message Sent ✓’;
   } catch(err) {
     status.className = 'yn-form-status error';
     status.textContent = 'Something went wrong. Please email us at support@giftingnetwork.com';
@@ -1554,18 +1548,6 @@ async function submitHS(d) {
   if (!res.ok) throw new Error('HubSpot ' + res.status);
 }
 
-async function submitZD(d) {
-  var url = 'https://' + ZD_SUBDOMAIN + '.zendesk.com/api/v2/requests.json';
-  var payload = {
-    request: {
-      subject: '[' + d.subject + '] ' + d.firstName + ' ' + d.lastName + ' — ' + d.company,
-      comment: {body: 'Name: ' + d.firstName + ' ' + d.lastName + '\nEmail: ' + d.email + '\nCompany: ' + d.company + '\nPhone: ' + (d.phone||'N/A') + '\nTopic: ' + d.subject + '\n\nMessage:\n' + d.message},
-      requester: {name: d.firstName + ' ' + d.lastName, email: d.email}
-    }
-  };
-  var res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
-  if (!res.ok) throw new Error('Zendesk ' + res.status);
-}
 
 /* ── Scroll animations ── */
 var observer=new IntersectionObserver(function(entries){
